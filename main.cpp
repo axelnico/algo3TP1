@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 
 // Representacion es con un vector de booleanos, indicando en cada posicion si el producto se agrega o no
 int BT(int i, int k) {
-    if (i == (n - 1) ) {
+    if (i == n ) {
         return isAValidSolution() ? k : 0;
     }
     partialSolution[i] = false;
