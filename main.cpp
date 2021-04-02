@@ -26,35 +26,18 @@ int BT(int i, int k);
 int n = 5;
 int R = 50;
 vector<bool> partialSolution;
-vector<Product*> products;
+vector<Product> products;
 
 int main(int argc, char** argv)
 {
-    partialSolution.push_back(false);
-    partialSolution.push_back(false);
-    partialSolution.push_back(false);
-    partialSolution.push_back(false);
-    partialSolution.push_back(false);
-    Product* product1 = new Product();
-    product1->weight = 10;
-    product1->resistance = 45;
-    products.push_back(product1);
-    Product* product2 = new Product();
-    product2->weight = 20;
-    product2->resistance = 8;
-    products.push_back(product2);
-    Product* product3 = new Product();
-    product3->weight = 30;
-    product3->resistance = 15;
-    products.push_back(product3);
-    Product* product4 = new Product();
-    product4->weight = 10;
-    product4->resistance = 2;
-    products.push_back(product4);
-    Product* product5 = new Product();
-    product5->weight = 15;
-    product5->resistance = 30;
-    products.push_back(product5);
+    cin >> n >> R;
+    partialSolution.assign(n,false);
+    for(int i = 0; i < n; i++){
+        Product product;
+        cin >> product.weight;
+        cin >> product.resistance;
+        products.push_back(product);
+    }
     int result = BT(0,0);
     cout << result << endl;
 }
@@ -74,7 +57,7 @@ int BT(int i, int k) {
 
 bool resistsWeight(int i, int totalWeigth) {
     if(partialSolution[i]) {
-        return (totalWeigth - products[i]->weight) <= products[i]->resistance;
+        return (totalWeigth - products[i].weight) <= products[i].resistance;
     }
     // Si el producto no se agrego se interpreta como que resiste el peso
     return true;
@@ -87,7 +70,7 @@ int calculateTotalWeightOfAddedProducts() {
     int total = 0;
     while (i < length) {
         if(partialSolution[i]) {
-            total += products[i]->weight;
+            total += products[i].weight;
         }
         i++;
     }
@@ -100,7 +83,7 @@ bool isAValidSolution() {
     int weigthAbove = totalWeigth;
     while(j < n && resistsWeight(j,weigthAbove)) {
         if (partialSolution[j]) {
-            weigthAbove = weigthAbove - products[j]->weight;
+            weigthAbove = weigthAbove - products[j].weight;
         }
         j++;
     }
