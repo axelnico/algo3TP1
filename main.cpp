@@ -15,21 +15,26 @@ struct Product {
 };
 
 
-bool isAValidSolution(bool partialSolution[], int R, int n, vector<Product*> products);
+bool isAValidSolution();
 
-bool resistsWeight(bool partialSolution[],int i,vector<Product*> products, int totalWeigth);
+bool resistsWeight(int i, int totalWeigth);
 
-int calculateTotalWeightOfAddedProducts(bool partialSolution[], vector<Product*> products);
+int calculateTotalWeightOfAddedProducts();
 
 int BT(int i, int k);
 
 int n = 5;
 int R = 50;
-bool partialSolution[5];
+vector<bool> partialSolution;
 vector<Product*> products;
 
 int main(int argc, char** argv)
 {
+    partialSolution.push_back(false);
+    partialSolution.push_back(false);
+    partialSolution.push_back(false);
+    partialSolution.push_back(false);
+    partialSolution.push_back(false);
     Product* product1 = new Product();
     product1->weight = 10;
     product1->resistance = 45;
@@ -55,12 +60,10 @@ int main(int argc, char** argv)
 }
 
 
-
-
 // Representacion es con un vector de booleanos, indicando en cada posicion si el producto se agrega o no
 int BT(int i, int k) {
-    if (i == n - 1 ) {
-        return isAValidSolution(partialSolution,R, n, products) ? k : 0;
+    if (i == (n - 1) ) {
+        return isAValidSolution() ? k : 0;
     }
     partialSolution[i] = false;
     int sinagregar = BT(i + 1,k);
@@ -69,15 +72,15 @@ int BT(int i, int k) {
     return max(sinagregar,agregado);
 }
 
-bool resistsWeight(bool partialSolution[],int i,vector<Product*> products, int totalWeigth) {
+bool resistsWeight(int i, int totalWeigth) {
     if(partialSolution[i]) {
-        return totalWeigth <= products[i]->resistance;
+        return (totalWeigth - products[i]->weight) <= products[i]->resistance;
     }
     // Si el producto no se agrego se interpreta como que resiste el peso
     return true;
 }
 
-int calculateTotalWeightOfAddedProducts(bool partialSolution[], vector<Product*> products) {
+int calculateTotalWeightOfAddedProducts() {
     // itera el arreglo y se queda con el peso de todos los elementos agregados
     int length = products.size();
     int i = 0;
@@ -91,14 +94,11 @@ int calculateTotalWeightOfAddedProducts(bool partialSolution[], vector<Product*>
     return total;
 }
 
-bool isAValidSolution(bool partialSolution[], int R, int n, vector<Product*> products) {
+bool isAValidSolution() {
     int j = 0;
-    int totalWeigth = calculateTotalWeightOfAddedProducts(partialSolution,products);
+    int totalWeigth = calculateTotalWeightOfAddedProducts();
     int weigthAbove = totalWeigth;
-    if (partialSolution[0]) {
-        weigthAbove = weigthAbove - products[0]->weight;
-    }
-    while(j < n && resistsWeight(partialSolution,j,products,weigthAbove)) {
+    while(j < n && resistsWeight(j,weigthAbove)) {
         if (partialSolution[j]) {
             weigthAbove = weigthAbove - products[j]->weight;
         }

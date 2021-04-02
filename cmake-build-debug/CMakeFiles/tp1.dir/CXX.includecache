@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/nico/CLionProjects/tp1/main.cpp
+iostream
+-
+vector
+-
+algorithm
+-
+cstdio
+-
+cstdlib
+-
+chrono
+-
+set
+-
+map
+-
+
