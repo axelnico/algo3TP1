@@ -23,6 +23,9 @@ int calculateTotalWeightOfAddedProducts();
 
 int BT(int i, int k);
 
+int DP(int i, int r, int j);
+
+
 int n = 5;
 int R = 50;
 vector<bool> partialSolution;
@@ -38,7 +41,7 @@ int main(int argc, char** argv)
         cin >> product.resistance;
         products.push_back(product);
     }
-    int result = BT(0,0);
+    int result = DP(n-1, 50, 0);
     cout << result << endl;
 }
 
@@ -89,4 +92,14 @@ bool isAValidSolution() {
     }
     // R es la resitencia del tubo
     return j == n && totalWeigth <= R;
+}
+
+
+int DP(int i, int r, int j) {
+    if (i == -1) return 0;
+    if (i != -1 and (products[i].weight > r or products[i].resistance < j)) return DP(i-1, r, j);
+    else {
+
+        return max(DP(i-1, r, j), DP(i-1, r - products[i].weight, products[i].weight + j) + 1);
+    }
 }

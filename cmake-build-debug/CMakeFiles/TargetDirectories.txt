@@ -1,3 +1,3 @@
-/Users/nico/Documents/algo3/labo/algo3TP1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/nico/Documents/algo3/labo/algo3TP1/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/nico/Documents/algo3/labo/algo3TP1/cmake-build-debug/CMakeFiles/tp1.dir
+/home/alex/algo3TP1/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/alex/algo3TP1/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/alex/algo3TP1/cmake-build-debug/CMakeFiles/tp1.dir
