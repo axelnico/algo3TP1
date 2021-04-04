@@ -21,10 +21,13 @@ bool resistsWeight(int i, int totalWeigth);
 
 int calculateTotalWeightOfAddedProducts();
 
+int BTPodas(int i, int k);
+
 int BT(int i, int k);
 
 int n = 5;
 int R = 50;
+int maxValue = 0;
 vector<bool> partialSolution;
 vector<Product> products;
 
@@ -38,7 +41,8 @@ int main(int argc, char** argv)
         cin >> product.resistance;
         products.push_back(product);
     }
-    int result = BT(0,0);
+    //int result = BT(0,0);
+    int result = BTPodas(0,0);
     cout << result << endl;
 }
 
@@ -48,6 +52,23 @@ int BT(int i, int k) {
     if (i == n ) {
         return isAValidSolution() ? k : 0;
     }
+    partialSolution[i] = false;
+    int sinagregar = BT(i + 1,k);
+    partialSolution[i] = true;
+    int agregado = BT( i + 1, k + 1);
+    return max(sinagregar,agregado);
+}
+
+int BTPodas(int i, int k) {
+    if (i == n ) {
+        if(isAValidSolution()){
+            if(k > maxValue) maxValue = k;
+            return k;
+        }
+        return 0;
+    }
+    if(calculateTotalWeightOfAddedProducts() > R) return 0;
+    if(k + (n-i) <= maxValue) return 0;
     partialSolution[i] = false;
     int sinagregar = BT(i + 1,k);
     partialSolution[i] = true;
