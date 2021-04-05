@@ -16,17 +16,7 @@ struct Product {
 
 
 bool isAValidSolution();
-vector<vector<vector<int>>> memoria2(int n, int r, int j) {
-    vector<vector<vector<int>>> mem;
-    for (int i; i < n; i++) {
-        for (int i; i < r; i++) {
-            for (int i; i < j; i++) {
-                mem[i][r][j] = -1;
-            }
-        }
-    }
-    return mem;
-}
+
 bool resistsWeight(int i, int totalWeigth);
 
 int calculateTotalWeightOfAddedProducts();
