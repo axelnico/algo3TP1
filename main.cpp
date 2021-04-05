@@ -44,7 +44,7 @@ int main(int argc, char** argv)
     vector<vector<int>> memoria;
     for (int i = 0; i < n; i++) {
         memoria.push_back({});
-        for (int j = 0; j < R; j++) {
+        for (int j = 0; j <= R; j++) {
             memoria[i].push_back(-1);
         }
     }
@@ -104,9 +104,9 @@ bool isAValidSolution() {
 
 int DP(int i, int r, int j, vector<vector<int>> &m) {
     if (i == -1) return 0;
-    if (m[i][r-1] == -1) {
-        if (i != -1 and (products[i].weight > r or products[i].resistance < j)) m[i][r-1] = DP(i-1, r, j, m);
-        else m[i][r-1] = max(DP(i-1, r, j, m), DP(i-1, r - products[i].weight, products[i].weight + j, m) + 1);
+    if (m[i][r] == -1) {
+        if (i != -1 and (products[i].weight > r or products[i].resistance < j)) m[i][r] = DP(i-1, r, j, m);
+        else m[i][r] = max(DP(i-1, r, j, m), DP(i-1, r - products[i].weight, products[i].weight + j, m) + 1);
     }
-    return m[i][r-1];
+    return m[i][r];
 }
