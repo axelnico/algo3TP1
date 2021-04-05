@@ -16,14 +16,24 @@ struct Product {
 
 
 bool isAValidSolution();
-
+vector<vector<vector<int>>> memoria2(int n, int r, int j) {
+    vector<vector<vector<int>>> mem;
+    for (int i; i < n; i++) {
+        for (int i; i < r; i++) {
+            for (int i; i < j; i++) {
+                mem[i][r][j] = -1;
+            }
+        }
+    }
+    return mem;
+}
 bool resistsWeight(int i, int totalWeigth);
 
 int calculateTotalWeightOfAddedProducts();
 
 int BT(int i, int k);
 
-int DP(int i, int r, int j);
+int DP(int i, int r, int j, vector<vector<int>> &m);
 
 
 int n = 5;
@@ -41,7 +51,14 @@ int main(int argc, char** argv)
         cin >> product.resistance;
         products.push_back(product);
     }
-    int result = DP(n-1, 50, 0);
+    vector<vector<int>> memoria;
+    for (int i = 0; i < n; i++) {
+        memoria.push_back({});
+        for (int j = 0; j < R; j++) {
+            memoria[i].push_back(-1);
+        }
+    }
+    int result = DP(n-1, 50, 0, memoria);
     cout << result << endl;
 }
 
@@ -95,11 +112,11 @@ bool isAValidSolution() {
 }
 
 
-int DP(int i, int r, int j) {
+int DP(int i, int r, int j, vector<vector<int>> &m) {
     if (i == -1) return 0;
-    if (i != -1 and (products[i].weight > r or products[i].resistance < j)) return DP(i-1, r, j);
-    else {
-
-        return max(DP(i-1, r, j), DP(i-1, r - products[i].weight, products[i].weight + j) + 1);
+    if (m[i][r-1] == -1) {
+        if (i != -1 and (products[i].weight > r or products[i].resistance < j)) m[i][r-1] = DP(i-1, r, j, m);
+        else m[i][r-1] = max(DP(i-1, r, j, m), DP(i-1, r - products[i].weight, products[i].weight + j, m) + 1);
     }
+    return m[i][r-1];
 }
