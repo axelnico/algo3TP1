@@ -14,19 +14,21 @@ struct Product {
     int resistance;
 };
 
+bool allProductsResistWeight(int i,int totalWeigth);
 
-bool isAValidSolution();
+bool isAValidSolution(int totalWeigth);
 
 int PD(int i, int r);
 
 bool resistsWeight(int i, int totalWeigth);
 
-int calculateTotalWeightOfAddedProducts();
+int BTPodas(int i, int k, int p);
 
-int BT(int i, int k);
+int BT(int i, int k, int p);
 
 int n = 5;
 int R = 50;
+int maxValue = 0;
 vector<bool> partialSolution;
 vector<Product> products;
 vector<vector<int>> memoriaPD;
@@ -51,14 +53,32 @@ int main(int argc, char** argv)
 
 
 // Representacion es con un vector de booleanos, indicando en cada posicion si el producto se agrega o no
-int BT(int i, int k) {
+int BT(int i, int k, int p) {
     if (i == n ) {
-        return isAValidSolution() ? k : 0;
+        return isAValidSolution(p) ? k : 0;
     }
     partialSolution[i] = false;
-    int sinagregar = BT(i + 1,k);
+    int sinagregar = BT(i + 1,k, p);
     partialSolution[i] = true;
-    int agregado = BT( i + 1, k + 1);
+    int agregado = BT( i + 1, k + 1, p + products[i].weight);
+    return max(sinagregar,agregado);
+}
+
+int BTPodas(int i, int k,int p) {
+    if (i == n ) {
+        if(isAValidSolution(p)){
+            if(k > maxValue) maxValue = k;
+            return k;
+        }
+        return 0;
+    }
+    if(p > R) return 0;
+    if(!allProductsResistWeight(i,p)) return 0;
+    if(k + (n-i) <= maxValue) return 0;
+    partialSolution[i] = false;
+    int sinagregar = BTPodas(i + 1,k,p);
+    partialSolution[i] = true;
+    int agregado = BTPodas( i + 1, k + 1, p + products[i].weight);
     return max(sinagregar,agregado);
 }
 
@@ -70,32 +90,20 @@ bool resistsWeight(int i, int totalWeigth) {
     return true;
 }
 
-int calculateTotalWeightOfAddedProducts() {
-    // itera el arreglo y se queda con el peso de todos los elementos agregados
-    int length = products.size();
-    int i = 0;
-    int total = 0;
-    while (i < length) {
-        if(partialSolution[i]) {
-            total += products[i].weight;
-        }
-        i++;
-    }
-    return total;
-}
-
-bool isAValidSolution() {
+bool allProductsResistWeight(int i,int totalWeigth) {
     int j = 0;
-    int totalWeigth = calculateTotalWeightOfAddedProducts();
     int weigthAbove = totalWeigth;
-    while(j < n && resistsWeight(j,weigthAbove)) {
+    while(j < i && resistsWeight(j,weigthAbove)) {
         if (partialSolution[j]) {
             weigthAbove = weigthAbove - products[j].weight;
         }
         j++;
     }
-    // R es la resitencia del tubo
-    return j == n && totalWeigth <= R;
+    return j == i;
+}
+
+bool isAValidSolution(int totalWeigth) {
+    return allProductsResistWeight(n,totalWeigth) && totalWeigth <= R;
 }
 
 int PD(int i, int r){
