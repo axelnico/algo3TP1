@@ -17,6 +17,8 @@ struct Product {
 
 bool isAValidSolution();
 
+int PD(int i, int r);
+
 bool resistsWeight(int i, int totalWeigth);
 
 int calculateTotalWeightOfAddedProducts();
@@ -27,6 +29,9 @@ int n = 5;
 int R = 50;
 vector<bool> partialSolution;
 vector<Product> products;
+vector<vector<int>> memoriaPD;
+
+const int UNDEFINED = -1;
 
 int main(int argc, char** argv)
 {
@@ -38,7 +43,9 @@ int main(int argc, char** argv)
         cin >> product.resistance;
         products.push_back(product);
     }
-    int result = BT(0,0);
+    memoriaPD = vector<vector<int>>(n+1, vector<int>(R+1, UNDEFINED));
+    //int result = BT(0,0);
+    int result = PD(n,R);
     cout << result << endl;
 }
 
@@ -89,4 +96,16 @@ bool isAValidSolution() {
     }
     // R es la resitencia del tubo
     return j == n && totalWeigth <= R;
+}
+
+int PD(int i, int r){
+    if (i == 0) return 0;
+    if(memoriaPD[i][r] == -1){
+        if(products[i-1].weight > r or products[i-1].resistance < R  -r) {
+            memoriaPD[i][r] = PD(i-1,r);
+        } else {
+            memoriaPD[i][r] = max(PD(i-1,r),PD(i-1,r-products[i-1].weight) + 1);
+        }
+    }
+    return memoriaPD[i][r];
 }
