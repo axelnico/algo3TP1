@@ -18,9 +18,9 @@ bool allProductsResistWeight(int i,int totalWeigth);
 
 bool isAValidSolution(int totalWeigth);
 
-bool resistsWeight(int i, int totalWeigth);
+int PD(int i, int r);
 
-int calculateTotalWeightOfAddedProducts();
+bool resistsWeight(int i, int totalWeigth);
 
 int BTPodas(int i, int k, int p);
 
@@ -31,6 +31,9 @@ int R = 50;
 int maxValue = 0;
 vector<bool> partialSolution;
 vector<Product> products;
+vector<vector<int>> memoriaPD;
+
+const int UNDEFINED = -1;
 
 int main(int argc, char** argv)
 {
@@ -42,8 +45,9 @@ int main(int argc, char** argv)
         cin >> product.resistance;
         products.push_back(product);
     }
-    //int result = BT(0,0,0);
-    int result = BTPodas(0,0,0);
+    memoriaPD = vector<vector<int>>(n+1, vector<int>(R+1, UNDEFINED));
+    //int result = BT(0,0);
+    int result = PD(n,R);
     cout << result << endl;
 }
 
@@ -68,7 +72,6 @@ int BTPodas(int i, int k,int p) {
         }
         return 0;
     }
-    //if(calculateTotalWeightOfAddedProducts() > R) return 0;
     if(p > R) return 0;
     if(!allProductsResistWeight(i,p)) return 0;
     if(k + (n-i) <= maxValue) return 0;
@@ -87,20 +90,6 @@ bool resistsWeight(int i, int totalWeigth) {
     return true;
 }
 
-int calculateTotalWeightOfAddedProducts() {
-    // itera el arreglo y se queda con el peso de todos los elementos agregados
-    int length = products.size();
-    int i = 0;
-    int total = 0;
-    while (i < length) {
-        if(partialSolution[i]) {
-            total += products[i].weight;
-        }
-        i++;
-    }
-    return total;
-}
-
 bool allProductsResistWeight(int i,int totalWeigth) {
     int j = 0;
     int weigthAbove = totalWeigth;
@@ -114,6 +103,17 @@ bool allProductsResistWeight(int i,int totalWeigth) {
 }
 
 bool isAValidSolution(int totalWeigth) {
-    // R es la resitencia del tubo
     return allProductsResistWeight(n,totalWeigth) && totalWeigth <= R;
+}
+
+int PD(int i, int r){
+    if (i == 0) return 0;
+    if(memoriaPD[i][r] == -1){
+        if(products[i-1].weight > r or products[i-1].resistance < R  -r) {
+            memoriaPD[i][r] = PD(i-1,r);
+        } else {
+            memoriaPD[i][r] = max(PD(i-1,r),PD(i-1,r-products[i-1].weight) + 1);
+        }
+    }
+    return memoriaPD[i][r];
 }
