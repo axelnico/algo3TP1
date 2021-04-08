@@ -26,8 +26,8 @@ int BTPodas(int i, int k, int p);
 
 int BT(int i, int k, int p);
 
-int n = 5;
-int R = 50;
+int n;
+int R;
 int maxValue = 0;
 vector<bool> partialSolution;
 vector<Product> products;
