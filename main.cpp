@@ -45,9 +45,10 @@ int main(int argc, char** argv)
         cin >> product.resistance;
         products.push_back(product);
     }
-    memoriaPD = vector<vector<int>>(n+1, vector<int>(R+1, UNDEFINED));
-    //int result = BT(0,0);
-    int result = PD(n,R);
+    //memoriaPD = vector<vector<int>>(n+1, vector<int>(R+1, UNDEFINED));
+    //int result = BT(0,0,0);
+    //int result = PD(n,R);
+    int result = BTPodas(0,0,0);
     cout << result << endl;
 }
 
@@ -65,16 +66,13 @@ int BT(int i, int k, int p) {
 }
 
 int BTPodas(int i, int k,int p) {
-    if (i == n ) {
-        if(isAValidSolution(p)){
-            if(k > maxValue) maxValue = k;
-            return k;
-        }
-        return 0;
-    }
     if(p > R) return 0;
     if(!allProductsResistWeight(i,p)) return 0;
     if(k + (n-i) <= maxValue) return 0;
+    if (i == n ) {
+        if(k > maxValue) maxValue = k;
+        return k;
+    }
     partialSolution[i] = false;
     int sinagregar = BTPodas(i + 1,k,p);
     partialSolution[i] = true;
