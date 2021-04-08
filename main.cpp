@@ -106,7 +106,7 @@ bool isAValidSolution(int totalWeigth) {
 
 int PD(int i, int r){
     if (i == 0) return 0;
-    if(memoriaPD[i][r] == -1){
+    if(memoriaPD[i][r] == UNDEFINED){
         if(products[i-1].weight > r or products[i-1].resistance < R  -r) {
             memoriaPD[i][r] = PD(i-1,r);
         } else {
