@@ -59,18 +59,18 @@
 
 \section{Introducción} \label{sec:introduccion}
 
-La cadena de supermercados Jambo quiere construir un robot con el fin de optimizar las operaciones en sus locales. Uno de ellos es el servicio de empacado de productos en los denominados jambos-tubos, donde en cada tubo se apilan los distitos productos, uno arriba del otro, es decir, un producto no puede estar ubicado al lado de otro, solamente arriba o abajo.\\
+La cadena de supermercados Jambo quiere construir un robot con el fin de optimizar las operaciones en sus locales. Uno de ellos es el servicio de empacado de productos en los denominados jambos-tubos, donde en cada tubo se apilan los distintos productos, uno arriba del otro, es decir, un producto no puede estar ubicado al lado de otro, solamente arriba o abajo.\\
 
 Como es de conocimiento general, hay ciertos productos que si tienen cierto peso por encima se aplastan, lo cual es una situaci\'on indeseable. Por lo cual, vamos a tener que resolver este problema decidiendo qu\'e productos apilar para no aplastar los otros que estan abajo. Entonces, sabiendo el orden de la llegada de los productos y sus respectivos pesos y resistencias, es decir, cu\'anto peso pueden tener arriba sin ser aplastados, decidir cu\'ales de los productos poner en el tubo. Observar que el tubo tiene tambi\'en su resistencia propia, o sea que tiene un l\'imite de peso total que se puede cargar.\\
 
-Vamos a llamar $R$ a la resistencia del tubo, $n$ a la cantidad de productos, $S$ a la secuencia ordenada de $n$ productos, $w_i$ al peso de cada producto y $r_i$ a sus respectivos resistencias asociados. El problema consiste en determinar la máxima cantidad de productos que pueden apilarse en el tubo, sin que ninguno esté aplastado. Notar que se debe respetar el orden dado y que todos los valores mencionados son enteros no negativos. Por ejemplo, dado un tubo con $R = 50$, $n = 5$, $w = [10, 20, 30, 10, 15]$ y $r = [45, 8, 15, 2, 30]$, la soluci\'on \'optima es 3, y consiste en tomar los elementos 1, 3 y 4. Observar que tomando los elementos 1, 3 y 5 no es una soluci\'on factible ya que la suma de sus pesos es $55 > R$.\\
+Vamos a llamar $R$ a la resistencia del tubo, $n$ a la cantidad de productos, $S$ a la secuencia ordenada de $n$ productos, $w_i$ al peso de cada producto y $r_i$ a sus respectivos resistencias asociados. El problema consiste en determinar la máxima cantidad de productos que pueden apilarse en el tubo, sin que ninguno esté aplastado. Notar que se debe respetar el orden dado y que todos los valores mencionados son enteros no negativos. Por ejemplo, dado un tubo con $R = 50$, $n = 5$, $w = [10, 20, 30, 10, 15]$ y $r = [45, 8, 15, 2, 30]$, la soluci\'on \'optima es 3, y consiste en tomar los elementos 1, 3 y 4. Observar que tomando los elementos 1, 3 y 5 no es una soluci\'on factible ya que la suma de sus pesos es $55 > R$. Otro ejemplo, en donde no hay una solución, puede ser con  $R = 50$, $n = 3$, $w = [55, 65, 60]$ y $r = [20, 10, 5]$. En este caso no se puede agregar ningún producto, porque se aplastan y porque todos pesan más que la resistencia del tubo, por lo que la respuesta al problema es $0$.     \\
 
-La finalidad de este trabajo es resolver el problema presentado de los jambo-tubos, utilizando tres t\'ecnias de programaci\'on distintas. La primera consiste en un algoritmo de fuerza bruta recursivo, que enumera todas las posibles soluciones qued\'andose con la mejor posible de las factibles. La segunda t\'ecnica consiste en un algoritmo de backtracking implementado con podas para reducir la cantiad de nodos del \'arbol con el objetivo de que sea m\'as efeciente. Y finalmente se presentar\'a un algoritmo recursivo de programaci\'on din\'amica, utilizando memoizaci\'on para evitar repetir los c\'omputos de los subproblemas.
+La finalidad de este trabajo es resolver el problema presentado de los jambo-tubos, utilizando tres t\'ecnicas de programaci\'on distintas. La primera consiste en un algoritmo de fuerza bruta recursivo, que enumera todas las posibles soluciones qued\'andose con la mejor posible de las factibles. La segunda t\'ecnica consiste en un algoritmo de backtracking implementado con podas para reducir la cantidad de nodos del \'arbol con el objetivo de que sea m\'as efeciente. Y finalmente se presentar\'a un algoritmo recursivo de programaci\'on din\'amica, utilizando memoizaci\'on para evitar repetir los c\'omputos de los subproblemas. Posteriormente se realizará una experimentación comparando estos tres algoritmos con distintos tipos de instancias para ver como se comportan en distintas situaciones. Se cuenta para todos los algoritmos con un vector de longitud $n$, denominado $productos$ que tiene en cada posicion una estructura que representa a un producto con su peso y resistencia. Asi, por ejemplo el peso y la resistencia del producto $i$ se accede con $productos[i].peso$ y $productos[i].resistencia$ respectivamente.
 
 \section{Fuerza Bruta} \label{sec:fuerza_bruta}
 La t\'ecnica algorítmica de  Fuerza Bruta consiste en enumerar todo el conjunto de soluciones en búsqueda de aquellas factibles u óptimas según si el problema es de decisión u optimización. En este caso, se trata de un problema donde se busca el número máximo de productos que se pueden apilar, dadas unas restricciones. El conjunto de soluciones está compuesto entonces por todos los subconjuntos de $S$, es decir, es el \emph{conjunto de partes de $S$} que se escribe $\mathcal{P}(S)$.
 
-La idea del Algoritmo~\ref{alg:fuerza_bruta} para resolver el problema del jambo-tubo es ir generando las soluciones de manera recursiva decidiendo en cada paso si un producto de $S$ es agregado o no y quedándose con la mejor solución (el máximo) de alguna de las dos ramas. Cuando se llega a una solución (que es cuando se analizan todos los productos, hayan o no hayan sido agregados), se verifica que la solución es válida, es decir, cumple con los requisistos del problema, en este caso que ningún producto se aplaste y que la suma de los pesos $w_i$ no supere la resistencia del tubo $R$. En caso de sér válida se devuelve la cantidad de productos apilados. En caso de no ser válida se devuelve 0. Para este algoritmo se usa una variable global denominada $solucionParcial$, que es un vector de valores booleanos de longitud $n$ inicializado completamente en $false$, que se utiliza para saber si un producto fue o no agregado. Cuando es agregado el producto $i$ se almacena en la posición $solucionParcial[i]$ el valor $true$, caso contrario el valor $false$.
+La idea del Algoritmo~\ref{alg:fuerza_bruta} para resolver el problema del jambo-tubo es ir generando las soluciones de manera recursiva decidiendo en cada paso si un producto de $S$ es agregado o no y quedándose con la mejor solución (el máximo) de alguna de las dos ramas. Cuando se llega a una solución (que es cuando se analizan todos los productos, hayan o no hayan sido agregados), se verifica que la solución es válida, es decir, cumple con los requisitos del problema, en este caso que ningún producto se aplaste y que la suma de los pesos $w_i$ no supere la resistencia del tubo $R$. En caso de sér válida se devuelve la cantidad de productos apilados. En caso de no ser válida se devuelve 0. Para este algoritmo se usa una variable global denominada $solucionParcial$, que es un vector de valores booleanos de longitud $n$ inicializado completamente en $false$, que se utiliza para saber si un producto fue o no agregado. Cuando es agregado el producto $i$ se almacena en la posición $solucionParcial[i]$ el valor $true$, caso contrario el valor $false$.
 
 En la Figura~\ref{fig:ejemplo_fuerza_bruta} se ve un ejemplo del árbol de recursión para la instancia $S =\{1, 2, 3\}$ y $W=3$. Cada nodo intermedio del árbol representa una \emph{solución parcial}, es decir, cuando aún no se tomaron todas las decisiones de qué elementos incluir, mientras que las hojas representan a todas las soluciones (8 en este caso). La solución óptima $\{3\}$ está marcada en rojo y la otra solución factible $\{1, 2\}$ en gris. Notar que la solución al problema original es exactamente $FB(S, W, 0, 0, 0)$.
 
@@ -78,12 +78,12 @@ En la Figura~\ref{fig:ejemplo_fuerza_bruta} se ve un ejemplo del árbol de recur
 \begin{algorithmic}[1]
 \Function{$FB$}{$i$, $k$, $p$}
     \If{$i = n$}
-        \IfThenElse{$esSolucionValida$}{\textbf{return} $k$}{\textbf{return} $0$}
+        \IfThenElse{$esSolucionValida(p)$}{\textbf{return} $k$}{\textbf{return} $0$}
     \EndIf
-    \State solucionParcial[i] = false
-    \State sinAgregar = {$FB$($i+1$, $k$, $p$)}
-    \State solucionParcial[i] = true
-    \State agregado = {$FB$($i+1$, $k + 1$, $p + productos[i].peso$)}
+    \State {$solucionParcial[i] \gets false$}
+    \State {$sinAgregar \gets FB(i+1, k, p)$}
+    \State {$solucionParcial[i] \gets true$}
+    \State {$agregado \gets FB(i+1, k + 1, p + productos[i].peso)$}
     \State \textbf{return} $\max \{ sinAgregar,agregado \}$.
 \EndFunction
 \end{algorithmic}
@@ -91,32 +91,42 @@ En la Figura~\ref{fig:ejemplo_fuerza_bruta} se ve un ejemplo del árbol de recur
 \label{alg:fuerza_bruta}
 \end{algorithm}
 
-La correctitud del algoritmo se debe a que se generan todas las posibles soluciones, dado que para cada elemento de $S$ se crean dos ramas una agregandólo al producto y la otra no agregándolo. Cuando no se agrega al producto simplemente se pasa al siguiente. Cuando es agregado el producto, se incrementa en uno el valor de $k$ que representa la cantidad de productos agregados, y se agrega también el peso del producto agregado a $p$, que contiene el peso acumulado de los productos agregados. Al haber generado todas las posibles soluciones, debe encontrarse la óptima (de existir), caso contrario el valor del óptimo será $0$, ya que no es posible apilar ningun próducto. La óptima va a ser encontrada mediante la llamada a la funcion $máx$ que calcula el valor máximo entre las dos ramas consideradas.
+La correctitud del algoritmo se debe a que se generan todas las posibles soluciones, dado que para cada elemento de $S$ se crean dos ramas una agregandólo al producto y la otra no agregándolo. Cuando no se agrega al producto simplemente se pasa al siguiente. Cuando es agregado el producto, se incrementa en uno el valor de $k$ que representa la cantidad de productos agregados, y se agrega también el peso del producto agregado a $p$, que contiene el peso acumulado de los productos agregados. Al haber generado todas las posibles soluciones, debe encontrarse la óptima (de existir), caso contrario el valor del óptimo será $0$, ya que no es posible apilar ningun próducto. La óptima va a ser encontrada mediante la llamada a la funcion $max$ que calcula el valor máximo entre las dos ramas consideradas. El resultado al problema se obtiene llamando a la función $FB$($0$, $0$, $0$).
 
 La complejidad del Algoritmo~\ref{alg:fuerza_bruta} para el peor caso es $O(n*2^n)$. Esto se debe a que el árbol de recursión es un árbol binario completo de $n+1$ niveles (contando la raíz), dado que cada nodo se ramifica en dos hijos y en cada paso el parámetro $i$ es incrementado en 1 hasta llegar a $n$. La solución de cada llamado recursivo toma tiempo constante dado que se realizan solo sumas, asignaciones a vectores y comparaciones, excepto el caso cuando $i = n$. En este caso, que correspondería a las hojas del árbol, cuando se terminaron de analizar todos los productos, se llama a una función cuyo costo es de $O(n)$. El pseudocódigo de la función es el siguiente:
 
 \begin{algorithm}
 \begin{algorithmic}[1]
-\Function{$FB$}{$i$, $k$, $p$}
-    \If{$i = n$}
-        \IfThenElse{$esSolucionValida$}{\textbf{return} $k$}{\textbf{return} $0$}
-    \EndIf
-    \State $solucionParcial[i] \gets false$
-    \State $sinAgregar \gets {$FB$($i+1$, $k$, $p$)}$
-    \State $solucionParcial[i] \gets true$
-    \State $agregado \gets {$FB$($i+1$, $k + 1$, $p + productos[i].peso$)}$
-    \State \textbf{return} $\max \{ sinAgregar,agregado \}$.
+\Function{$esSolucionValida$}{$p$}
+    \State \textbf{return} todosLosProductosResistenPeso($n$, $p$) \textbf{and} $p$ $<=$ $R$.
 \EndFunction
+
+\Function{$todosLosProductosResistenPeso$}{$i$, $p$}
+    \State $j$ = $0$
+    \State $pesoEncima$ = $p$
+    \While{$j$ $<$ $i$ \textbf{and} $resistePeso$($j$, $pesoEncima$)} \Comment{corta si producto $j$ se aplasta}
+        \If{$solucionParcial(j)$}
+            \State $pesoEncima \gets pesoEncima - productos[j].peso$
+        \EndIf
+        \State $j++$
+    \EndWhile
+    \State \textbf{return} $j$ $=$ $i$
+\EndFunction
+
+\Function{$resistePeso$}{$i$, $p$}
+    \If{$solucionParcial(i)$}
+            \State \textbf{return} $p$ $-$ $productos[i].peso$ $<=$ $productos[i].resistencia$
+        \EndIf 
+    \State \textbf{return} $true$
+\EndFunction
+
 \end{algorithmic}
-\caption{función para verificar si una solución encontrada es válida}
-\label{alg:fuerza_bruta}
+\caption{funciones para verificar si una solución encontrada es válida}
 \end{algorithm}
 
+De la función expuesta arriba se puede deducir que la complejidad de la función que determina si los productos resisten el peso encima ($todosLosProductosResistenPeso$) es $O(n)$ en el peor caso, ya que se realizan todas operaciones en tiempo constante, y sólo hay un ciclo que en el peor caso itera $n$ veces (cuando es llamada con el parámetro $n$). Notar que el ciclo corta ni bien encuentra un producto que no resiste el peso encima de el. Para saber cuál es el peso encima de cada producto, al peso total recibido se le va restando el peso de cada producto y verificando que el peso restante no sea mayor a la resistencia del producto para el producto $i$. 
 
-
-
-
-Como corolario, se puede concluir que el algoritmo se comporta de igual manera frente a todos los tipos de instancia, dado que siempre genera el mismo número de nodos. Dicho de otro modo, el conjunto de instancias de peor caso es igual al conjunto de instancias de mejor caso. 
+Con lo expuesto anteriormente, también se puede pensar que si bien la complejidad del algoritmo de fuerza bruta es $O(n*2^n)$, el algoritmo va a presentar una mejor performance en instancias en donde pocos productos puedan ser apilados (con el mejor caso siendo cuando ningún producto se puede apilar) y se va a comportar de una peor manera en tiempos de ejecución en instancias en donde varios productos se pueden apilar (con el peor caso siendo que todos los productos se puedan apilar). La causa de esta hipótesis es que el ciclo que verifica que los productos se pueden o no apilar, corta ni bien un producto no se puede apilar, es decir, no itera siempre hasta el final, por lo que si ningún producto se puede apilar, no itera ni una sola vez. Caso contrario, si todos se pueden apilar iterará hasta $n$. Obviamente para las soluciones candidatas en donde no se agregan productos, con el caso extremo de la solucion en donde no se considera agregar ninguno, la iteracion se realizará hasta $n$ ya que la función de $resistePeso$ devuelve verdadero si el producto no fue agregado. Esta hipótesis será puesta a prueba en el apartado de experimentación de este trabajo.
 
 \begin{figure}
     \centering
@@ -166,32 +176,48 @@ Como corolario, se puede concluir que el algoritmo se comporta de igual manera f
 \end{figure}
 
 \section{Backtracking} \label{sec:backtracking}
-Los algoritmos de Backtracking siguen una idea similar a Fuerza Bruta pero con algunas consideraciones especiales. En esencia, se enumeran todas las soluciones formando un \emph{árbol de backtracking} de manera similar a Fuerza Bruta, donde en cada nodo se generan todas las posibles decisiones locales y se mantiene la mejor solución hallada con alguna de ellas. La diferencia radica en las denominadas \emph{podas} que son reglas que permiten evitar explorar partes del árbol en las que se \emph{sabe} que no va a existir ninguna solución de interés. Generalmente estas podas dependen de cada problema en particular, pero las más comunes suelen dividirse en dos categorías: \emph{factibilidad} y \emph{optimalidad}.
+La técnica de Backtracking consiste en ir generando solucion parciales, que se van extendiendo hasta llegar a una solución final, para enumerar todas las soluciones posibles. Es una idea similar a Fuerza bruta. De hecho el algoritmo presentando de Fuerza bruta sigue este idea, ya que Fuerza bruta se puede implementar con backtracking. La diferencia con Fuerza bruta radica en las denominadas \emph{podas} que son reglas que permiten evitar explorar partes del árbol que genera backtracking, en las que se \emph{sabe} que no va a existir ninguna solución de interés. Dicho de otra manera se \emph{poda} el árbol, por lo que se tienen que analizar menos nodos.  Generalmente estas podas dependen de cada problema en particular, pero las más comunes suelen dividirse en dos categorías: \emph{factibilidad} y \emph{optimalidad}. Para el caso del agoritmo propuesto en esta sección al problema de los jambo-tubos se utilizaron dos podas de factibilidad y una de optimalidad. 
 
-\paragraph{Poda por factibilidad}
-En este caso, una poda por factibilidad es la siguiente. Sea $S'$ una solución parcial representada en un nodo intermedio $n_0$ con suma $w = \sum S'$. Claramente, al ser todos los números de $S$ enteros positivos, si $w > W$ entonces no va a haber ninguna forma de extender $S'$ (o conservarlo) de manera tal que su suma sea $W$. De este modo, podemos evitar seguir explorando el subárbol formado debajo de $n_0$ y por lo tanto, reducir la cantidad de operaciones de nuestro algoritmo. Esta poda está expresada en la línea \ref{linea:fact} del Algoritmo~\ref{alg:backtracking}.
+\paragraph{Podas por factibilidad}
+La primera poda por factibilidad es la siguiente. Sea $p$ el peso acumulado de los productos agregados en un nodo intermedio $n_0$. Si $p$ ya es mayor a $R$ entonces, no va a ver forma de extender la solución parcial a una solución válida debido a que todos los $w_i$ son positivos, por lo que el peso que se agregaría extendiendo una solución sería siempre mayor a 0 (o 0 en caso de que no se agregue ningun producto más). Por lo tanto podemos retornar 0 ya que la solución ya no es válida ni puede serlo más adelante. Esta poda está expresada en la línea \ref{linea:fact} del Algoritmo~\ref{alg:backtracking}.
+La segunda poda por factibilidad es: Sea $p$ el peso acumulado de los productos agregados en un nodo intermedio $n_0$. Si existe un $producto_i$ que fue agregado y que no resiste el peso por encima de el (siendo el peso por encima de el, el peso total de los productos agregados hasta el nodo $n_0$ menos el peso del mismo producto $i$ y de todos los productos que están por debajo de $i$), entonces esta solución parcial tampoco puede ser extendida a una solución factible, ya que por más que no se agregue ningún producto más, va a seguir sin resistir el peso, y si se agrega algún producto más como todos los pesos son positivos, va a tener más peso por encima, por lo que tampoco va a resistir. Se puede entonces retornar y devolver 0. Esta poda está expresada en la línea \ref{linea:fact} del Algoritmo~\ref{alg:backtracking}.
 
 \paragraph{Poda por optimalidad}
-Supongamos que ya se conoce una solución factible para el problema con cardinal $K$. Además, supongamos que se está en un nodo intermedio $n_0$ que representa a una solución parcial $S'$ con $k$ elementos. En este caso, si $k \geq K$, como cualquier decisión que se tome a continuación en el subárbol va a agregar o mantener la cantidad de elementos seleccionados, podemos asegurar que cualquier solución factible que se encuentre al explorarlo va a ser al menos tan buena como la que ya conocemos. Por lo tanto, se puede podar esta rama y así evitar el cómputo innecesario de operaciones. En el Algoritmo~\ref{alg:backtracking} se actualiza una variable global $K$ cada vez que se halla una solución factible en la línea \ref{linea:opt_actualizar}, y se evalúa la regla de la poda en la línea \ref{linea:opt}.
+Para el caso de esta poda, se utiliza otra variable auxiliar global denominada $maxValue$. En esta variable se irá almacenando la mejor solución encontrada hasta el momento por el algoritmo de backtracking, es decir la máxima cantidad de productos que se pueden apilar. Entonces para los nodos intermedios $n_0$, que representa a una solución parcial, se realiza la siguiente comprobación. En la variable $k$ se tiene la cantidad de productos agregados para esa solución parcial. Si sumando a este valor, la cantidad de productos que no se revisaron aún (es decir, suponiendo que se pueden agregar todos los productos que faltan), no puedo superar al máximo encontrado, entonces no voy a llegar a una solución óptima por este subárbol. Podemos retornar 0 y así evitar el cómputo innecesario de operaciones.En el Algoritmo~\ref{alg:backtracking} se actualiza la variable $maxValue$ cada vez que se halla una mejor solución factible en la línea \ref{linea:opt_actualizar}, y se evalúa la regla de la poda en la línea \ref{linea:opt}.
 
 \begin{algorithm}
 \begin{algorithmic}[1]
-\State $K \gets \infty$
-\Function{$BT$}{$S$, $W$, $i$, $w$, $k$}
-    \If{$i = n$}
-        \IfThen{$w = W$}{$K \gets \min \{ K, k \}$} \label{linea:opt_actualizar}
-        \IfThenElse{$w = W$}{\textbf{return} $k$}{\textbf{return} $\infty$}
+\State $maxValue \gets 0$
+\Function{$BTPodas$}{$i$, $k$, $p$}
+   \If{$p > R$}
+   {\textbf{return} $0$}
+   \EndIf
+   \If{$ \textbf{not} {todosLosProductosResistenPeso}(i, p)$}
+   {\textbf{return} $0$}
+   \EndIf
+   \If{$k + (n - i) <= maxValue$}
+   {\textbf{return} $0$}
+   \EndIf
+   \If{$i = n$}
+        \If{$k > maxValue$}
+        {$maxValue \gets k$}
+        \EndIf
+        \State \textbf{return} $k$
     \EndIf
-    \IfThen{$w > W$}{\textbf{return} $\infty$} \label{linea:fact}
-    \IfThen{$k \geq K$}{\textbf{return} $\infty$} \label{linea:opt}
-    \State \textbf{return} $\min \{ BT(S, W, i+1, w, k), BT(S, W, i+1, w+S_i, k+1) \}$.
+    \State {$solucionParcial[i] \gets false$}
+    \State {$sinAgregar \gets BTPodas(i+1, k, p)$}
+    \State {$solucionParcial[i] \gets true$}
+    \State {$agregado \gets BTPodas(i+1, k + 1, p + productos[i].peso)$}
+    \State \textbf{return} $\max \{ sinAgregar,agregado \}$.
 \EndFunction
 \end{algorithmic}
-\caption{Algoritmo de Backtracking para SSP.}
+\caption{Algoritmo de Backtracking con podas para jambo-tubos.}
 \label{alg:backtracking}
 \end{algorithm}
 
-La complejidad del algoritmo en el peor caso es $O(2^n)$. Esto es así, porque en el peor escenario no se logra podar ninguna rama y por lo tanto se termina enumerando el árbol completo al igual que en Fuerza Bruta. Además, se puede observar que el código introducido en las líneas \ref{linea:opt_actualizar}, \ref{linea:fact} y \ref{linea:opt} solamente agrega un número constante de operaciones. Existe una familia de instancias para las cuales este algoritmo va a enumerar todo el árbol, que son aquellas con $S=\{1, \hdots, 1\}$ ($|S|=n$) y $W=n$. Notar que existe una única solución factible que es tomar todo $S$ y esto solamente ocurre en el último nodo explorado (ver Fig~\ref{fig:ejemplo_fuerza_bruta}). Por otro lado, el mejor caso ocurre cuando la solución óptima se encuentra rápidamente. La familia de instancias $S=\{1, \hdots, 1, W\}$ con algún $W > 0$ una solución óptima al explorar la primera rama (ver Fig~\ref{fig:ejemplo_fuerza_bruta}) y luego la poda por optimalidad garantiza que ningún otro nodo se va a ramificar. Por lo tanto, en estos casos el algoritmo se comporta de manera lineal. Observar que existen otras familias de instancias para las cuales el algoritmo también tiene un comporamiento similar, por ejemplo, si $S = \{ W+1, \hdots, W+1 \}$ con algún $W > 0$, entonces la poda por factibilidad garantiza que no se enumeran más de $O(n)$ nodos.
+El algoritmo presentado de backtracking es correcto debido a que es exactamente el mismo que el utilizado en fuerza bruta (que ya fue demostrado que es correcto porque genera todas las soluciones candidatas posibles) con el agregado de podas, que ya fueron explicadas por qué son correctas. Notar que cuando se llega a una hoja de este árbol generado ($i$ $=$ $n$) no es necesario preguntar si la solución encontrada es válida, ya que las podas se usan en todos los nodos (tanto los intermedios como los nodos hojas), por lo que si se llega a la condicion de que $i$ $=$ $n$, ya está garantizado que el peso acumulado $p$ no supera la resistencia del tubo $R$ y que todos los productos desde el primero hasta el último resisten el peso por encima, que es lo que validaba la función de $esSolucionValida$. La solucion al problema tambien se obtiene llamando a la funcion $BTPodas(0, 0 , 0)$
+
+La complejidad del algoritmo en el peor caso es $O(n*2^n)$. Esto se debe a que el algoritmo genera el mismo árbol que fuerza bruta en el peor caso, pero ahora la diferencia es que en cada nodo, tanto intermedio como hoja, se llama a la funcion para verificar si todos los productos resisten el peso, que ya se demostró que tiene una complejidad temporal de $O(n)$ en el peor caso. La cantidad de nodos internos en un arbol completo binario de $n + 1$ niveles es $2^n$ por lo que la cantidad de operaciones seria $2^n*n$ para todos los nodos intermedios y $2^n*n$ para los nodos hoja también. Por lo tanto la complejidad resultante es $O(n*2^n)$. No se ha podido identificar igualmente un caso o un tipo de instancias en particular en donde ninguna de las podas se utilice. Para los casos en donde ningún producto se puede agregar debido a que todos superan la resistencia del peso, se resuelve de manera muy eficiente ya que la primera poda que verifica que el peso acumulado no supera la resistencia hace que no se revise ningun subarbol en donde se agregue un producto. Los casos en donde se agregan pocos porque muy pocos resisten el peso encima, tambien se resuelven de manera eficiente por la poda que verifica que si algun producto agregado ya no soporta el peso, entonces no se siga por ese subarbol. Y los casos en donde muchos productos se pueden agregar (o todos se pueden agregar) la poda de optimalidad es util, ya que una vez que se encontro una solucion donde se agregaron $maxValue$ productos, todas las instancias en donde no se van a agregar mas de $maxValue$ productos, ya no se revisan.
 
 \section{Programación Dinámica} \label{sec:dp}
 Los algoritmos de \emph{Programación Dinámica} entran en juego cuando un problema recursivo tiene superposición de subproblemas. La idea es sencilla y consiste en evitar recalcular todo el subárbol correspondiente si ya fue hecho con anterioridad. En este caso, definimos la siguiente función recursiva que resuelve el problema:
