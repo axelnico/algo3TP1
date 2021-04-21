@@ -263,10 +263,10 @@ Se concluye entonces que es beneficioso agregar una memoria que recuerde cuando 
 \label{alg:dp}
 \end{algorithm}
 
-La complejidad del algoritmo entonces está determinada por la cantidad de estados que se resuelven y el costo de resolver cada uno de ellos. Como mencionamos previamente, a lo sumo se resuelven $O(n * w)$ estados distintos, y como todas las líneas del Algoritmo~\ref{alg:dp} realizan operaciones constantes entonces cada estado se resuelve en $O(1)$. Como resultado, el algoritmo tiene complejidad $O(n*w)$ en el peor caso. Es importante observar que el diccionario $M$ se puede implementar como una matriz con acceso y escritura constante. Más aún, notar que su inicialización tiene costo $\Theta(n*w)$, por lo tanto, el mejor y peor caso de nuestro algoritmo va a tener costo $\Theta(n*w)$.
+La complejidad del algoritmo entonces está determinada por la cantidad de estados que se resuelven y el costo de resolver cada uno de ellos. Como mencionamos previamente, a lo sumo se resuelven $O(n * R)$ estados distintos, y como todas las líneas del Algoritmo~\ref{alg:dp} realizan operaciones constantes entonces cada estado se resuelve en $O(1)$. Como resultado, el algoritmo tiene complejidad $O(n*R)$ en el peor caso. Es importante observar que el diccionario $M$ se puede implementar como una matriz con acceso y escritura constante. Más aún, notar que su inicialización tiene costo $\Theta(n*R)$, por lo tanto, el mejor y peor caso de nuestro algoritmo va a tener costo $\Theta(n*R)$.
 
 \section{Experimentación} \label{sec:experimentacion}
-En esta sección se presenta los experimentos computacionales realizados para evaluar los distintos métodos presentados en las secciones anteriores. Las ejecuciones fueron realizadas en una workstation con CPU Intel~Core~i7 @ 2.8~GHz y 8~GB de memoria RAM, y utilizando el lenguaje de programación \emph{C++}.
+En esta sección se presenta los experimentos computacionales realizados para evaluar los distintos métodos presentados en las secciones anteriores. Las ejecuciones fueron realizadas en una computadora con CPU Intel~Core~i7 @ 2.8~GHz y 8~GB de memoria RAM, y utilizando el lenguaje de programación \emph{C++}.
 
 \subsection{Métodos}
 Las configuraciones y métodos utilizados durante la experimentación son los siguientes:
@@ -275,14 +275,12 @@ Las configuraciones y métodos utilizados durante la experimentación son los si
     \setlength{\parskip}{0pt}
     \setlength{\parsep}{0pt}
     \item \textbf{FB}: Algoritmo~\ref{alg:fuerza_bruta} de Fuerza Bruta de la Sección~\ref{sec:fuerza_bruta}.
-    \item \textbf{BT}: Algoritmo~\ref{alg:backtracking} de Backtracking de la Sección~\ref{sec:backtracking}.
-    \item \textbf{BT-F}: Algoritmo~\ref{alg:backtracking} con excepción de la línea~\ref{linea:opt}, es decir, solamente aplicando podas por factibilidad.
-    \item \textbf{BT-O}: Similar al método BT-F pero solamente aplicando podas por optimalidad, o sea, descartando la línea~\ref{linea:fact} del Algoritmo~\ref{alg:backtracking}.
+    \item \textbf{BTPodas}: Algoritmo~\ref{alg:backtracking} de Backtracking de la Sección~\ref{sec:backtracking}.
     \item \textbf{DP}: Algoritmo~\ref{alg:dp} de Programación Dinámica de la Sección~\ref{sec:dp}.
 \end{itemize}
 
 \subsection{Instancias}
-Para evaluar los algoritmos en distintos escenarios es preciso definir familias de instancias conformadas con distintas características. Por ejemplo, el algoritmo de Backtracking como se menciona en la Sección~\ref{sec:backtracking} tiene familias que producen mejores y peores casos para el algoritmo. Primero, antes de enumerar los \emph{datasets}, se define la \emph{densidad} de una instancia como el cociente $\frac{\max S_i}{W}$, es decir, es una medida de cuántos números de $S$ se necesitan para sumar $W$. A menor densidad, los números de $S$ son más chicos en relación a $W$ y por lo tanto se necesitan más de ellos. Finalmente, los \emph{datasets} definidos se enumeran a continuación.
+Para evaluar los algoritmos en distintos escenarios es preciso definir familias de instancias conformadas con distintas características. Por ejemplo, se ha probado con casos en donde se pod\'ia agregar todos los productos y casos en donde no se pod\'ia agregar ning\'un producto. Tambi\'en se ha realizado casos en donde el $R$ es muy grande, como tambi\'en $R$ aleatorio y resistencia de productos aleatorios.
 \begin{itemize}
     \setlength{\itemsep}{1pt}
     \setlength{\parskip}{0pt}
