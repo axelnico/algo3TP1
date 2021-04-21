@@ -245,12 +245,17 @@ Se concluye entonces que es beneficioso agregar una memoria que recuerde cuando 
 
 \begin{algorithm}
 \begin{algorithmic}[1]
-\State $M_{iw} \gets \bot$ for $i \in [1, n], w \in [0, W]$.
+\State $M_{ir} \gets -1$ for $i \in [0, n], w \in [0, R]$.
 \Function{$DP$}{$i$, $w$}
-    \IfThen{$w > W$}{\textbf{return} $\infty$}
-    \IfThen{$i = n+1$ and $w \neq W$}{\textbf{return} $\infty$}
-    \IfThen{$i = n+1$ and $w = W$}{\textbf{return} 0}
-    \IfThen{$M_{iw} = \bot$}{$M_{iw} \gets \min \{ DP(i+1, w), 1+DP(i+1,w+S_i) \}$} \label{linea:memoizacion}
+    \IfThen{$i = 0$}{$M_{ir} = 0$}
+    \If{$M_{ir} = -1$}
+    	
+    	\If{$productos[i-1].peso > r$ \textbf{or} $productos[i-1].resistencia < R - r$}\
+    		$M_{ir} = PD(i-1,r)$
+    	\Else{$M_{ir} = $max\{$PD(i-1, r), PD(i-1, r - productos[i-1].peso) + 1$\}}
+    	\EndIf
+    \EndIf
+    \label{linea:memoizacion}
     \State \textbf{return} $M_{iw}$
 \EndFunction
 \end{algorithmic}
