@@ -10,7 +10,7 @@
 
 % Comandos para referencias
 \usepackage{natbib}
-
+\usepackage{float}
 % Comandos para Figuras, Graficos, Tikz etc.
 \usepackage{tikz}
 \usepackage{epsfig}
@@ -74,7 +74,7 @@ La t\'ecnica algorítmica de  Fuerza Bruta consiste en enumerar todo el conjunto
 
 La idea del Algoritmo~\ref{alg:fuerza_bruta} para resolver el problema del jambo-tubo es ir generando las soluciones de manera recursiva decidiendo en cada paso si un producto de $S$ es agregado o no y quedándose con la mejor solución (el máximo) de alguna de las dos ramas. Cuando se llega a una solución (que es cuando se analizan todos los productos, hayan o no hayan sido agregados), se verifica que la solución es válida, es decir, cumple con los requisitos del problema, en este caso que ningún producto se aplaste y que la suma de los pesos $w_i$ no supere la resistencia del tubo $R$. En caso de sér válida se devuelve la cantidad de productos apilados. En caso de no ser válida se devuelve 0. Para este algoritmo se usa una variable global denominada $solucionParcial$, que es un vector de valores booleanos de longitud $n$ inicializado completamente en $false$, que se utiliza para saber si un producto fue o no agregado. Cuando es agregado el producto $i$ se almacena en la posición $solucionParcial[i]$ el valor $true$, caso contrario el valor $false$.
 
-En la Figura~\ref{fig:ejemplo_fuerza_bruta} se ve un ejemplo del árbol de recursión para la instancia $S =\{1, 2, 3\}$ y $W=3$. Cada nodo intermedio del árbol representa una \emph{solución parcial}, es decir, cuando aún no se tomaron todas las decisiones de qué elementos incluir, mientras que las hojas representan a todas las soluciones (8 en este caso). La solución óptima $\{3\}$ está marcada en rojo y la otra solución factible $\{1, 2\}$ en gris. Notar que la solución al problema original es exactamente $FB(S, W, 0, 0, 0)$.
+En la Figura~\ref{fig:ejemplo_fuerza_bruta} se ve un ejemplo del árbol de recursión para la instancia $n=3$. Cada nodo intermedio del árbol representa una \emph{solución parcial}, es decir, cuando aún no se tomaron todas las decisiones de qué elementos incluir, mientras que las hojas representan a todas las soluciones (8 en este caso). La solución óptima es $\{w_1, w_2\}$. El resto de las hojas o tienen menor o igual que un solo elemento o no es una soluci\'on factible.
 
 \begin{algorithm}
 \begin{algorithmic}[1]
@@ -137,30 +137,30 @@ Con lo expuesto anteriormente, también se puede pensar que si bien la complejid
     \centering
         % Arcos
         \draw[color=black, -] (11, 6) -- node[above] {$\cup \emptyset$} (5, 4);
-        \draw[color=black, -] (11, 6) -- node[above] {$\cup 1$} (17, 4);
+        \draw[color=black, -] (11, 6) -- node[above] {$\cup w_1$} (17, 4);
         
         \draw[color=black, -] (5, 4) -- node[above left] {$\cup \emptyset$} (2, 2);
-        \draw[color=black, -] (5, 4) -- node[above right] {$\cup 2$} (8, 2);
+        \draw[color=black, -] (5, 4) -- node[above right] {$\cup w_2$} (8, 2);
         \draw[color=black, -] (17, 4) -- node[above left] {$\cup \emptyset$} (14, 2);
-        \draw[color=black, -] (17, 4) -- node[above right] {$\cup 2$} (20, 2);
+        \draw[color=black, -] (17, 4) -- node[above right] {$\cup w_{2}$} (20, 2);
         
         \draw[color=black, -] (2, 2) -- node[left] {$\cup \emptyset$} (0, 0);
-        \draw[color=black, -] (2, 2) -- node[right] {$\cup 3$} (4, 0);
+        \draw[color=black, -] (2, 2) -- node[right] {$\cup w_3$} (4, 0);
         \draw[color=black, -] (8, 2) -- node[left] {$\cup \emptyset$} (6, 0);
-        \draw[color=black, -] (8, 2) -- node[right] {$\cup 3$} (10, 0);
+        \draw[color=black, -] (8, 2) -- node[right] {$\cup w_3$} (10, 0);
         \draw[color=black, -] (14, 2) -- node[left] {$\cup \emptyset$} (12, 0);
-        \draw[color=black, -] (14, 2) -- node[right] {$\cup 3$} (16, 0);
+        \draw[color=black, -] (14, 2) -- node[right] {$\cup w_3$} (16, 0);
         \draw[color=black, -] (20, 2) -- node[left] {$\cup \emptyset$} (18, 0);
-        \draw[color=black, -] (20, 2) -- node[right] {$\cup 3$} (22, 0);
+        \draw[color=black, -] (20, 2) -- node[right] {$\cup w_3$} (22, 0);
         
         % Vertices
         \path (0,0) node[circle,draw,fill=white](A){};
-        \path (4,0) node[circle,draw,fill=red](B){};
+        \path (4,0) node[circle,draw,fill=white](B){};
         \path (6,0) node[circle,draw,fill=white](C){};
         \path (10,0) node[circle,draw,fill=white](D){};
         \path (12,0) node[circle,draw,fill=white](E){};
         \path (16,0) node[circle,draw,fill=white](F){};
-        \path (18,0) node[circle,draw,fill=gray](G){};
+        \path (18,0) node[circle,draw,fill=red](G){};
         \path (22,0) node[circle,draw,fill=white](H){};
         
         \path (2,2) node[circle,draw,fill=white](I){};
@@ -174,7 +174,8 @@ Con lo expuesto anteriormente, también se puede pensar que si bien la complejid
         \path (11,6) node[circle,draw,fill=white](O){};
     
     \end{tikzpicture}
-    \caption{Ejemplo de ejecución del Algoritmo~\ref{alg:fuerza_bruta} para $S = \{1, 2, 3\}$ y $W=3$.\\En rojo la solución óptima $\{3\}$ y en gris la otra solución factible.}
+    \caption{Ejemplo de ejecución del Algoritmo~\ref{alg:fuerza_bruta} para $n = 3$, $W = \{10, 10, 20\}$, $r = \{15, 18, 10\}$ $R=50$. En rojo la solución \'unica $\{{w_1, w_2}\}$ 
+    }
     \label{fig:ejemplo_fuerza_bruta}
 \end{figure}
 
@@ -286,7 +287,7 @@ El objetivo de este experimento es comprobar empiricamente la complejidad teoric
 La Figura~\ref{fig:fb-comparacion} presenta los resultados del experimento en donde se comparan los tiempos de ejecucion del algoritmo de FB para las instancias de  \textit{ningun-producto-agregable} y \textit{todos-los-productos-agregables} en funcion del tamaño de la entrada $n$. Se puede observar que el algoritmo efectivamente se comporta de mejor manera en terminos de tiempo de ejecucion para las instancias de \textit{ningun-producto-agregable}, a partir de $n = 5$ aproximadamente, por lo que se pudo probar la hipotesis, si bien la diferencia entre ambos tipos de instancias no es muy significativa. Es decir, se concluye que es una buena idea no iterar hasta el final de la lista de productos, si es que ya se encuentra uno invalido porque puede reducir los tiempos de ejecucion. 
 La otra figura ~\ref{fig:fb-comparacion-teorica} son datos ejecutados sobre la instancia de \textit{todos-los-productos-agregables}. Se usaron tambien las escalas logaritmicas para apreciar mejor la diferencia de tiempos de ejecucion para instancias de menor tamaño. Se puede concluir a partir de los graficos que efectivamente los tiempos de ejecucion se corresponden con la cota de complejidad teorica dada de $O(n*2^n)$. En la escala logaritmica se aprecia claramente una recta, a partir de instancias de tamaño 5, que por ser la escala logaritmica, significa que crece de manera exponencial. El índice de correlación de Pearson entre la cota de complejidad teorica y el tiempo de ejecucion para la instancia de \textit{todos-los-productos-agregables} es positivo y es $r \approx 0.99979$, como se ve en la figura ~\ref{fig:fb-correlacion}.
 
-\begin{figure}[!ht]
+\begin{figure}[H]
         \centering
         \begin{subfigure}{0.45\linewidth}
             \centering
@@ -305,7 +306,7 @@ La otra figura ~\ref{fig:fb-comparacion-teorica} son datos ejecutados sobre la i
     \label{fig:fb-comparacion}
     \end{figure}
     
-\begin{figure}[!ht]
+\begin{figure}[H]
         \centering
         \begin{subfigure}{0.45\linewidth}
             \centering
@@ -334,7 +335,7 @@ La otra figura ~\ref{fig:fb-comparacion-teorica} son datos ejecutados sobre la i
 
 \subsection{Experimento 2: Complejidad de los algoritmos (pocos productos)}
 
-En esta experimentacion vamos a comparar las complejidades de los tres algoritmos, en donde tomamos desde 1 a 30 productos. La resistencia del tubo var\'ia de 500 a 20000, tomado en forma aleatoria, como tambi\'en son el peso y la resistencia de los productos, variando de 1 a 500. Se uso funciones de la biblioteca random de python para generar los datos.
+En esta experimentacion vamos a comparar las complejidades de los tres algoritmos, en donde tomamos desde 1 a 30 productos. La resistencia del tubo var\'ia de 500 a 20000, tomado en forma aleatoria, como tambi\'en son el peso y la resistencia de los productos, variando de 1 a 500. Se uso funciones de la biblioteca random de python para generar los datos. Nuestra hip\'otesis es que la fuerza bruta ser\'a el menos eficiente y la programaci\'on din\'amica el mas eficiente, por los c\'alculos de complejidad te\'orica realizadas en los incisos anteriores.
 
     \begin{figure}[!ht]
         \centering
@@ -354,19 +355,38 @@ En esta experimentacion vamos a comparar las complejidades de los tres algoritmo
     \label{fig:bt-fb-dp-complejidad}
     \end{figure}
     
-En las figura~\ref{fig:comparacion-bt-fb-dp} se puede ver que el algoritmo de fuerza bruta tarda mucho mas que los otros dos algoritmos, de manera que los otros dos algoritmos son indistinguibles a simple vista. Por lo cual, se hizo la figura~\ref{fig:comparacion-bt-dp}, donde se compar\'o solamente el backtracking con la programaci\'on din\'amica. Se puede ver que con un $R$ acotado y una cantidad de productos relativamente acotado (de hasta 30 productos), el backtracking parece ser m\'as eficiente en promedio que la programaci\'on din\'amica.
+En la figura~\ref{fig:comparacion-bt-fb-dp} se puede ver que el algoritmo de fuerza bruta tarda mucho mas que los otros dos algoritmos, de manera que los otros dos algoritmos son indistinguibles a simple vista. Por lo cual, se hizo la figura~\ref{fig:comparacion-bt-dp}, donde se compar\'o solamente el backtracking con la programaci\'on din\'amica. Se puede ver que con un $R$ acotado y una cantidad de productos relativamente acotado (de hasta 30 productos), el backtracking parece ser m\'as eficiente en promedio que la programaci\'on din\'amica. Este resultado pareciera refutar nuestra hip\'otesis! Pero, tenemos que recordar que las complejidades te\'oricas tienen impl\'icitamente una constante multiplicativa y se vale a partir de cierto $n$ en adelante. Por lo cual, s\'olo podemos concluir que en nuestro caso de test particular, el bactracking tiende a ser el m\'as eficiente de los tres algoritmos.
 
 
 \subsection{Experimento 3: Complejidad de los algoritmos (muchos productos)}
 
-Naturalmente, surgen varias preguntas luego del experimento anterior. En particular, ¿siempre es mas eficiente el backtracking? La hip\'otesis es que para relativamente pocos productos y con un $R$ relativamente chico, el backtracking tiene una ventaja. Pero cuando mantenemos el $R$ en el mismo rango aumentando la cantidad de productos
+Naturalmente, surgen varias preguntas luego del experimento anterior. En particular, ¿siempre es mas eficiente el backtracking? ¿La complejidad te\'orica no es v\'alica? Ahora, nuestra hip\'otesis es que para relativamente pocos productos y con un $R$ relativamente chico, el backtracking tiene ventaja. Pero cuando mantenemos el $R$ en el mismo rango aumentando la cantidad de productos, a partir de cierto momento la programaci\'on din\'amica ser\'a mas eficiente.
 
+    \begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.45\linewidth}
+            \centering
+            \includesvg[scale=0.44]{images/comparacion-fb-dp-muchos-productos}
+            \caption{Escala normal}
+            \label{fig:comparacion-muchos-productos-escala-normal}
+        \end{subfigure}
+        \begin{subfigure}{0.45\linewidth}
+            \centering
+            \includesvg[scale=0.44]{images/comparacion-fb-dp-muchos-productos-log}
+            \caption{Escala logaritmica}
+            \label{fig:comparacion-muchos-productos-escala-log}
+        \end{subfigure}
+        \caption{Comparaci\'on del tiempo de ejecuci\'on del backtracking y de la programaci\'on din\'amica, de hasta 140 productos, con su peso y resistencia sampleado aleatoriamente.}
+        \label{fig:comparacion-muchos-productos}
+    \end{figure}
+    
+En definitiva, como se puede ver en la figura~\ref{fig:comparacion-muchos-productos-escala-normal}, a partir de alrededor de cierta cantidad de productos, el backtracking comienza a tardar cada vez m\'as tiempo para ejecutar. Esto indica que el beneficio de guardar en memoria los subproblemas ya resueltos comienza a mejorar notablemente la eficiencia, que corrobora con nuestra hip\'otesis. Para esclarecer mas, se hizo una escala logar\'itmica, como se puede ver en la figura~\ref{fig:comparacion-muchos-productos-escala-log}, para determinar con m\'as exactitud desde qu\'e cantidad de productos en adelante comienza a aventajar la programaci\'on din\'amica. Observamos que con $n=50$ en adelante, el backtracking ya no es el algoritmo mas eficiente, y, no s\'olo eso, sino que la diferencia aumenta exponencialmente. Entonces, para un $R$ tal que $nR << 2^n$, y un $n$ suficientemente grande, la programaci\'on din\'amica tiene una complejidad mucho menor al bactracking.
 
 \subsection{Experimento 4: Fuerza bruta vs Programación Dinámica}
 El último experimiento que se presentará en este trabajo es una comparación particular de PD y FB. Para este experimiento se usaron las intancias de \textit{R-grande} para los dos algoritmos. La hipótesis en este experimiento es que para instancias en donde el $R$ es muy grande (en este caso es igual a 400000000), PD sea incluso menos eficiente en tiempos de ejecución que FB para instancias pequeñas. De la figura ~\ref{fig:fb-pd-R-grande} se puede observar que PD presenta tiempos de ejecución superiores para instancias chicas, comprobando la hipótesis. Esto se debe en parte a que hay que inicializar una matriz de un tamaño bastante grande $n * R$ que en FB no hay que hacerlo. El crecimiento se puede ver que es lineal para PD. Eso se debe a que crece también cuando el número de productos aumenta (mantieniendo el $R$ constante). Esta observación igualmente es para instancias en donde el $n$ se mantiene en un rango no muy alto, ya que cuando $n$ crece mucho, la función exponencial que representa el tiempo de ejecución de FB va a crecer lo suficiente como para \textit{ganarle} al $R$ grande. Por lo tanto, en caso de tener un número de productos pequeño pero con un $R$ muy alto, PD no es una buena opción, incluso usar FB, que es una de las técnicas menos eficientes, es mejor.
 
 
-\begin{figure}[!ht]
+\begin{figure}[H]
         \centering
         \includesvg[scale=0.44]{images/R-grande-BT-PD.svg}
 \caption{FB vs PD en función de cantidad de productos con R = 400000000}
@@ -374,5 +394,7 @@ El último experimiento que se presentará en este trabajo es una comparación p
 \end{figure}
 
 \section{Conclusiones} \label{sec:conclusiones}
-Se utilizaron tres técnicas de programación distintas para resolver el problema presentado de los jambo-tubos. Del análisis y la experimentación realizada se puede concluir que Fuerza bruta es un algoritmo bastante ineficiente y solamente se puede aplicar para instancias muy chicas (con pocos productos en este caso) ya que para instancias grandes su tiempo de ejecución no es aceptable. La técnica de Backtracking con podas es bastante útil y para instancias con pocos productos es de hecho más rápido que programación dinámica. No obstante, cuando el tamaño de la entrada crece un poco, ya empieza a tener los mismos problemas que Fuerza bruta por más que se utilicen podas. La técnica de programación dinámica es una de las mejores para este problema, ya que presenta muy buenos tiempos de ejecución para incluso instancias con un número de productos importantes, pero es dependiente no sólo de la cantidad de productos, sino también de $R$, y cuando el $R$ crece de manera muy considerable, puede ser incluso menos eficiente que Fuerza Bruta. Como trabajo futuro, se puede pensar en una implementación de Programación dinámica con un enfoque $bottom-up$ iterativo para analizar si se puede mejorar más los tiempos de ejecución, disminuyendo la sobrecarga de la recursión, y disminuir la complejidad espacial del algoritmo, que es mayor al de los otros dos.
+Se utilizaron tres técnicas de programación distintas para resolver el problema presentado de los jambo-tubos. Del análisis y la experimentación realizada se puede concluir que Fuerza bruta es un algoritmo bastante ineficiente y solamente se puede aplicar para instancias muy chicas (con pocos productos en este caso) ya que para instancias grandes su tiempo de ejecución no es aceptable. La técnica de Backtracking con podas es bastante útil y para instancias con pocos productos es de hecho más rápido que programación dinámica. No obstante, cuando el tamaño de la entrada crece un poco, ya empieza a tener los mismos problemas que Fuerza bruta por más que se utilicen podas. La técnica de programación dinámica es una de las mejores para este problema, ya que presenta muy buenos tiempos de ejecución para incluso instancias con un número de productos importantes, pero es dependiente no sólo de la cantidad de productos, sino también de $R$, y cuando el $R$ crece de manera muy considerable, puede ser incluso menos eficiente que Fuerza Bruta. Otras de las desventajas de la programaci\'on din\'amica es que ocupa mucha m\'as memoria: $O(nR)$ para ser exacto. Lo que significa que en caso de que $n$ es lo suficientemente grande, podr\'ia llegar a tener problemas de espacio de memoria, aunque el an\'alisis de este caso no est\'a dentro del alcance de este TP.
+
+Como trabajo futuro, se puede pensar en una implementación de Programación dinámica con un enfoque $bottom-up$ iterativo para analizar si se puede mejorar más los tiempos de ejecución, disminuyendo la sobrecarga de la recursión, y disminuir la complejidad espacial del algoritmo, que es mayor al de los otros dos.
 \end{document}
